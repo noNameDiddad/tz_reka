@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTasksUserPivotTable extends Migration
+class CreateTaskUserTable extends Migration
 {
     /**
      * Run the migrations.
