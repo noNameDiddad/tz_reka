@@ -17,7 +17,7 @@ class CreateTaskUserTable extends Migration
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('access');
+            $table->string('access')->default('none');
             $table->primary(['task_id', 'user_id']);
         });
     }
