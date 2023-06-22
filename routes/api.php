@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskListController;
 use App\Models\User;
@@ -20,7 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('list/{list}')->group(function () {
         Route::apiResource('task', TaskController::class)->only(['index','store']);
     });
-    Route::apiResource('task', TaskController::class)->except(['index','store','show']);
+    Route::apiResource('file', FileController::class)->except(['index','show']);
+    Route::apiResource('task', TaskController::class)->only(['update','destroy']);
     Route::put('task/{task}/mark', [TaskController::class, 'markAsDoneUndone'])->name('task.mark');
 });
 
