@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Services\FileManager;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -17,10 +17,11 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $uploaded_file = $request->file('uploaded_file');
+        $path = $uploaded_file->store('files/' . now()->format('d-m-Y'), 'public');
         return File::create([
-            'path' => $uploaded_file->store('files/' . now()->format('d-m-Y'), 'public'),
+            'path' => $path,
             'name' => $uploaded_file->getClientOriginalName(),
-            'preview_path' => '',
+            'preview_path' => FileManager::makePreview($path),
             'filetype' => $uploaded_file->getClientMimeType(),
         ]);
     }
@@ -36,13 +37,12 @@ class FileController extends Controller
     {
         $uploaded_file = $request->file('uploaded_file');
         $path = $uploaded_file->store('files/' . now()->format('d-m-Y'), 'public');
-        if (Storage::exists('/public/' . $file->path)) {
-            Storage::delete('/public/' . $file->path);
-        }
+        FileManager::deleteFileWithPreview($file);
+
         return $file->update([
             'path' => $path,
             'name' => $uploaded_file->getClientOriginalName(),
-            'preview_path' => '',
+            'preview_path' => FileManager::makePreview($path),
             'filetype' => $uploaded_file->getClientMimeType(),
         ]);
     }
@@ -55,9 +55,7 @@ class FileController extends Controller
      */
     public function destroy(File $file): bool
     {
-        if (Storage::exists('/public/' . $file->path)) {
-            Storage::delete('/public/' . $file->path);
-        }
+        FileManager::deleteFileWithPreview($file);
         return $file->delete();
     }
 }
