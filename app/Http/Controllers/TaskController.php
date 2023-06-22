@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\User;
+use App\Models\TaskList;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -15,19 +14,9 @@ class TaskController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(TaskList $list)
     {
-        return Auth::user()->tasks;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return "create";
+        return $list->tasks;
     }
 
     /**
@@ -36,33 +25,9 @@ class TaskController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request, TaskList $list)
     {
-        $user = Auth::user();
-        /** @var User $user */
-        return $user->tasks()->create($request->all());
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param Task $task
-     * @return Response
-     */
-    public function show(Task $task)
-    {
-        return $task;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Task $task
-     * @return Response
-     */
-    public function edit(Task $task)
-    {
-        return "edit";
+        return $list->tasks()->create($request->all());
     }
 
     /**
