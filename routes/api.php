@@ -24,6 +24,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('task/{task}/mark', [TaskController::class, 'markAsDoneUndone'])->name('task.mark');
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
