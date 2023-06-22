@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\TaskList;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -12,7 +13,8 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @param TaskList $list
+     * @return mixed
      */
     public function index(TaskList $list)
     {
@@ -23,9 +25,10 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @param TaskList $list
+     * @return Model
      */
-    public function store(Request $request, TaskList $list)
+    public function store(Request $request, TaskList $list): Model
     {
         return $list->tasks()->create($request->all());
     }
@@ -35,7 +38,7 @@ class TaskController extends Controller
      *
      * @param Request $request
      * @param Task $task
-     * @return Response
+     * @return Task
      */
     public function update(Request $request, Task $task)
     {
@@ -48,14 +51,20 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Task $task
-     * @return Response
+     * @return bool|null
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): ?bool
     {
         return $task->delete();
     }
 
-    public function markAsDoneUndone(Task $task)
+    /**
+     * Mark task as done or undone
+     *
+     * @param Task $task
+     * @return bool
+     */
+    public function markAsDoneUndone(Task $task): bool
     {
         $task->is_done = $task->is_done ? false : true;
         return $task->save();

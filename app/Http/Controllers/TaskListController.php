@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use App\Models\TaskList;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class TaskListController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -24,10 +24,10 @@ class TaskListController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Model
      */
-    public function store(Request $request)
+    public function store(Request $request): Model
     {
         $user = Auth::user();
         /** @var User $user */
@@ -38,10 +38,10 @@ class TaskListController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Task $task
-     * @return Response
+     * @param TaskList $list
+     * @return TaskList
      */
-    public function update(Request $request, TaskList $list)
+    public function update(Request $request, TaskList $list): TaskList
     {
         $list->update($request->all());
 
@@ -51,10 +51,10 @@ class TaskListController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Task $task
-     * @return Response
+     * @param TaskList $list
+     * @return bool|null
      */
-    public function destroy(TaskList $list)
+    public function destroy(TaskList $list): ?bool
     {
         return $list->delete();
     }
