@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('task', TaskController::class)->only(['index','store']);
     });
     Route::apiResource('task', TaskController::class)->except(['index','store','show']);
+    Route::put('task/{task}/mark', [TaskController::class, 'markAsDoneUndone'])->name('task.mark');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

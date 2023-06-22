@@ -54,4 +54,10 @@ class TaskController extends Controller
     {
         return $task->delete();
     }
+
+    public function markAsDoneUndone(Task $task)
+    {
+        $task->is_done = $task->is_done ? false : true;
+        return $task->save();
+    }
 }
