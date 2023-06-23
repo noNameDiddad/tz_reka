@@ -12,18 +12,15 @@ class FileController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     * @param FileManager $fileManager
      * @return mixed
      */
-    public function store(Request $request)
+    public function store(Request $request, FileManager $fileManager)
     {
         $uploaded_file = $request->file('uploaded_file');
-        $path = $uploaded_file->store('files/' . now()->format('d-m-Y'), 'public');
-        return File::create([
-            'path' => $path,
-            'name' => $uploaded_file->getClientOriginalName(),
-            'preview_path' => FileManager::makePreview($path),
-            'filetype' => $uploaded_file->getClientMimeType(),
-        ]);
+        $path = $fileManager->saveUploadFile($uploaded_file);
+        return File::create($fileManager->makeFile($uploaded_file,$path));
+
     }
 
     /**
@@ -31,31 +28,28 @@ class FileController extends Controller
      *
      * @param Request $request
      * @param File $file
+     * @param FileManager $fileManager
      * @return bool
      */
-    public function update(Request $request, File $file): bool
+    public function update(Request $request, File $file, FileManager $fileManager): bool
     {
         $uploaded_file = $request->file('uploaded_file');
-        $path = $uploaded_file->store('files/' . now()->format('d-m-Y'), 'public');
-        FileManager::deleteFileWithPreview($file);
+        $path = $fileManager->saveUploadFile($uploaded_file);
+        $fileManager->deleteFileWithPreview($file);
 
-        return $file->update([
-            'path' => $path,
-            'name' => $uploaded_file->getClientOriginalName(),
-            'preview_path' => FileManager::makePreview($path),
-            'filetype' => $uploaded_file->getClientMimeType(),
-        ]);
+        return $file->update($fileManager->makeFile($uploaded_file,$path));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param File $file
+     * @param FileManager $fileManager
      * @return bool
      */
-    public function destroy(File $file): bool
+    public function destroy(File $file,  FileManager $fileManager): bool
     {
-        FileManager::deleteFileWithPreview($file);
+        $fileManager->deleteFileWithPreview($file);
         return $file->delete();
     }
 }
