@@ -70,4 +70,8 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'example_files' => [
+        'avatar' => env('EXAMPLE_AVATAR', 'files/example_avatar.jpeg')
+    ]
+
 ];

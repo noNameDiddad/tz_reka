@@ -96,11 +96,15 @@ class RegisterController extends Controller
     protected function create(Request $request)
     {
         $fileManager = new FileManager();
+        $path = config('filesystems.example_files.avatar');
+        if(!is_null($request->file('avatar'))) {
+            $path = $fileManager->saveUploadFile($request->file('avatar'));
+        }
         return User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'avatar' => $fileManager->saveUploadFile($request->file('avatar')),
+            'avatar' => $path,
         ]);
     }
 }
