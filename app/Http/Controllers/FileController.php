@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Task;
 use App\Services\FileManager;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class FileController extends Controller
@@ -12,14 +14,15 @@ class FileController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     * @param Task $task
      * @param FileManager $fileManager
-     * @return mixed
+     * @return Model
      */
-    public function store(Request $request, FileManager $fileManager)
+    public function store(Request $request, Task $task, FileManager $fileManager): Model
     {
         $uploaded_file = $request->file('uploaded_file');
         $path = $fileManager->saveUploadFile($uploaded_file);
-        return File::create($fileManager->makeFile($uploaded_file,$path));
+        return $task->files()->create($fileManager->makeFile($uploaded_file,$path));
 
     }
 

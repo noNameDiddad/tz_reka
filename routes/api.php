@@ -21,7 +21,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('list/{list}')->group(function () {
         Route::apiResource('task', TaskController::class)->only(['index','store']);
     });
-    Route::apiResource('file', FileController::class)->except(['index','show']);
+    Route::prefix('task/{task}')->group(function () {
+        Route::apiResource('file', FileController::class)->only(['store']);
+    });
+    Route::apiResource('file', FileController::class)->only(['update','destroy']);
     Route::apiResource('task', TaskController::class)->only(['update','destroy']);
     Route::put('task/{task}/mark', [TaskController::class, 'markAsDoneUndone'])->name('task.mark');
 });
